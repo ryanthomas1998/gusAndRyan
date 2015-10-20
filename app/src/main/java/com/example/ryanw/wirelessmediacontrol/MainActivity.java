@@ -1,21 +1,25 @@
 package com.example.ryanw.wirelessmediacontrol;
-
-import android.app.ActionBar;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.net.nsd.NsdManager;
-import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.SpinnerAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
@@ -26,6 +30,16 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, new IntentFilter("Msg"));
+
+
+
+
+
+
+
+
 
         mButt =  (Button) findViewById(R.id.play);
         AudioManager bob = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
@@ -101,7 +115,39 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private BroadcastReceiver onNotice= new BroadcastReceiver() {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String pack = intent.getStringExtra("package");
+            Log.d("Package Name", pack);
+            String title = intent.getStringExtra("title");
+            String text = intent.getStringExtra("text");
+            int id = intent.getIntExtra("icon", 0);
 
+            Context remotePackageContext = null;
+            try {
+//                remotePackageContext = getApplicationContext().createPackageContext(pack, 0);
+//                Drawable icon = remotePackageContext.getResources().getDrawable(id);
+//                if(icon !=null) {
+//                    ((ImageView) findViewById(R.id.imageTest)).setBackground(icon);
+//                }
+//                byte[] byteArray =intent.getByteArrayExtra("icon");
+//                Bitmap bmp = null;
+//                if(byteArray !=null) {
+//                    bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+//                }
+                TextView artist = (TextView) findViewById(R.id.artist);
+                artist.setText(title);
+                TextView song = (TextView) findViewById(R.id.crtSng);
+                song.setText(text);
 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 }
+
+
+
