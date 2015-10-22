@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.media.Image;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,15 +35,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(!(Settings.Secure.getString(MainActivity.this.getContentResolver(), "enabled_notification_listeners").contains(this.getPackageName())))
+        {
+            startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
+        }
+
+
+
         LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, new IntentFilter("Msg"));
-
-
-
-
-
-
-
-
 
         mButt =  (Button) findViewById(R.id.play);
         AudioManager bob = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
@@ -54,8 +57,6 @@ public class MainActivity extends Activity {
               play(v);
           }
       });
-
-
         findViewById(R.id.skipForward).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,27 +69,52 @@ public class MainActivity extends Activity {
                 skipB(v);
             }
         });
+        findViewById(R.id.imageTest).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ServerTesterActivity.class));
+                return false;
+            }
+        });
     }
 
     public void skipF(View v){
-       Intent test = new Intent("com.android.music.musicservicecommand");
-        test.putExtra("command", "next");
-        MainActivity.this.sendBroadcast(test);
+        Intent i = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        synchronized (this) {
+            i.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_NEXT));
+            sendOrderedBroadcast(i, null);
+
+            i.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_NEXT));
+            sendOrderedBroadcast(i, null);
+        }
     }
     public void skipB(View v){
-        Intent test = new Intent("com.android.music.musicservicecommand");
-        test.putExtra("command", "previous");
-        MainActivity.this.sendBroadcast(test);
+        Intent i = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        synchronized (this) {
+            i.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PREVIOUS));
+            sendOrderedBroadcast(i, null);
+
+            i.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PREVIOUS));
+            sendOrderedBroadcast(i, null);
+        }
     }
     public void play(View v){
-        Intent test = new Intent("com.android.music.musicservicecommand");
+
+        Intent i = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        synchronized (this) {
+            i.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
+            sendOrderedBroadcast(i, null);
+
+            i.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE));
+            sendOrderedBroadcast(i, null);
+        }
+
+
         if (mButt.getText().equals("Pause")){
             mButt.setText("Play");
-            test.putExtra("command", "pause");
         }
         else{
             mButt.setText("Pause");
-            test.putExtra("command", "pause");
         }
     }
 
@@ -120,31 +146,32 @@ public class MainActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String pack = intent.getStringExtra("package");
-            Log.d("Package Name", pack);
+            if(pack.equals("com.google.android.music")){
             String title = intent.getStringExtra("title");
             String text = intent.getStringExtra("text");
-            int id = intent.getIntExtra("icon", 0);
+
+
+            TextView artist = (TextView) findViewById(R.id.artist);
+            artist.setText(text);
+            TextView song = (TextView) findViewById(R.id.crtSng);
+            song.setText(title);
 
             Context remotePackageContext = null;
             try {
-//                remotePackageContext = getApplicationContext().createPackageContext(pack, 0);
-//                Drawable icon = remotePackageContext.getResources().getDrawable(id);
-//                if(icon !=null) {
-//                    ((ImageView) findViewById(R.id.imageTest)).setBackground(icon);
-//                }
-//                byte[] byteArray =intent.getByteArrayExtra("icon");
-//                Bitmap bmp = null;
-//                if(byteArray !=null) {
-//                    bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-//                }
-                TextView artist = (TextView) findViewById(R.id.artist);
-                artist.setText(title);
-                TextView song = (TextView) findViewById(R.id.crtSng);
-                song.setText(text);
+
+
+                byte[] byteArray =intent.getByteArrayExtra("icon");
+                Bitmap bmp = null;
+                if(byteArray !=null) {
+                    bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                }
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bmp);
+                ((ImageView) findViewById(R.id.imageTest)).setBackgroundDrawable(bitmapDrawable);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
         }
     };
 }

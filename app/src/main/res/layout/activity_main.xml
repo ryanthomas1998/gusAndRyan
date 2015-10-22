@@ -6,36 +6,23 @@
     tools:context=".MainActivity"
     android:background="#ffffff">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="335dp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/kodaline"
-        android:id="@+id/albumArt"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ALBUM ARTWORK"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textSize="50sp"
-            android:textColor="#75ffffff"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:fontFamily="sans-serif-light"/>
-    </RelativeLayout>
-    <RelativeLayout
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/imageTest"
+        />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/currentMedia"
-        android:layout_marginLeft="25dp"
+
         android:layout_marginTop="25dp"
         android:background="#EEEEEE"
         android:layout_centerHorizontal="true"
         android:padding="10dp"
-        android:elevation="5dp"
-        android:layout_below="@+id/albumArt">
+        android:elevation="2dp"
+        android:layout_below="@+id/imageTest">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,17 +36,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="The One"
+            android:text="No Music"
             android:id="@+id/crtSng"
             android:paddingLeft="5dp"
             android:fontFamily="sans-serif-light"
             android:textSize="20sp"
             android:layout_toEndOf="@+id/crtSngLbl"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageTest"
-            android:layout_toEndOf="@+id/crtSng"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +55,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kodaline"
+            android:maxHeight="25dp"
+            android:text="No Music"
             android:id="@+id/artist"
             android:fontFamily="sans-serif-light"
             android:paddingLeft="5dp"
