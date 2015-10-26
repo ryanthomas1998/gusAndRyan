@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="#ffffff">
+    android:id="@+id/mainlayout"
+    android:background="#ffffff"
+    >
 
     <ImageView
         android:layout_width="wrap_content"
@@ -16,18 +18,19 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/currentMedia"
-
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="25dp"
-        android:background="#EEEEEE"
+        android:background="#99EEEEEE"
         android:layout_centerHorizontal="true"
         android:padding="10dp"
         android:elevation="2dp"
-        android:layout_below="@+id/imageTest">
+        >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Current Song:"
             android:id="@+id/crtSngLbl"
+
             android:textSize="20sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-light"
@@ -36,6 +39,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxHeight="25dp"
             android:text="No Music"
             android:id="@+id/crtSng"
             android:paddingLeft="5dp"
@@ -63,6 +67,17 @@
             android:textSize="20sp"
             android:layout_below="@+id/crtSng"
             android:layout_toEndOf="@+id/artistLbl"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iplbl"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/server_status"
+            android:text="No IP Assigned"
+            android:layout_below="@+id/artistLbl"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -77,17 +92,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Skip Back"
+                android:padding="20dp"
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/skipBack"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Play"
                 android:id="@+id/play"
+                android:padding="20dp"
+                android:fontFamily="sans-serif-light"
                 android:layout_centerHorizontal="true"
                 android:layout_toEndOf="@+id/skipBack"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:fontFamily="sans-serif-light"
                 android:text="Skip Forward"
                 android:layout_toEndOf="@+id/play"
                 android:id="@+id/skipForward"/>
